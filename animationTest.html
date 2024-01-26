@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Random Animation</title>
+    <style>
+        .animated-image {
+            width: 200px;  /* Adjust the width as needed */
+            height: auto;  /* This keeps the aspect ratio */
+        }
+        .button-image {
+            position: relative;
+            display: flex;
+            width: 500px;
+            height: auto;
+            left: 450px;
+        }
+        .flip-horizontal {
+            transform: scaleX(-1); /* Flip horizontally */
+        }
+        #animateMe {
+            position: absolute;
+            top: -100px; /* Start off-screen */
+            transition: top 2s, left 2s; /* Smooth transition for falling and walking */
+            display: none; /* Hidden initially */
+        }
+        #ground {
+            position: absolute;
+            bottom: 20%;
+            left: 0;
+            right: 0;
+            height: 10px;
+            background-color: black;
+        }
+        #startButton {
+            cursor: pointer; /* Change cursor to indicate it's clickable */
+        }
+    </style>
+</head>
+<body>
+
+<img src="startButton.png" class="button-image" id="startButton" onmousedown="changeImage()" onmouseup="revertImage()" onclick="startAnimation()" alt="Start Button">
+<div id="ground"></div>
+
+
+<script>
+    var originalImageSrc = 'startButton.png'; // Original image
+    var clickedImageSrc = 'startButtonClick.png'; // Image during click
+    var endButtonImageSrc = 'endButton.png'; 
+    var clickedEndButtonImageSrc = 'endButtonClick.png';
+    var poof = 'poof.png';
+
+    function startAnimation() {
+        // Array of image sources
+        const imageSources = ['cat.png', 'sandpiper.png', 'shroomer.png', 'knifeChick.png'];
+
+        // Loop through each image source in the array
+        imageSources.forEach(function(src) {
+            // Create a new image element
+            var newImg = document.createElement('img');
+            newImg.src = src; // Set the source from the array
+            newImg.className = 'animated-image'; // Set the class for styling and selection
+            newImg.style.display = 'block'; // Initially visible
+            newImg.id = "animateMe";
+            newImg.style.top = '-30%'; // Start off-screen
+
+            document.body.appendChild(newImg); // Append the new image to the body (or to a specific container)
+
+            // Drop the image to the ground and then make it walk around
+            setTimeout(function() {
+                walkAround(newImg);
+            }, 100); // Time for the drop animation
+        });
+    }
+    
+    function changeImage() {
+        var image = document.getElementById('startButton');
+        image.src = clickedImageSrc;
+    }
+
+    function revertImage() {
+        var button = document.getElementById('startButton');
+        button.src = originalImageSrc;
+        setTimeout(function() {
+            button.src = endButtonImageSrc;
+            button.onmousedown = endButtonClickImageChange;
+            button.onmouseup = endButtonClickImageRevert;
+            //button.innerHTML = "New Button Text"; // Change the button text
+            button.onclick = endLittleGuys; // Change the function called on click
+            // You can also add more changes here like changing the button's style
+        }, 2200);
+    }
+
+    function endButtonClickImageChange() {
+        var button = document.getElementById('startButton');
+        button.src = clickedEndButtonImageSrc;
+    }
+    function endButtonClickImageRevert() {
+        var button = document.getElementById('startButton');
+        button.src = endButtonImageSrc;
+    }
+    function endLittleGuys() {
+        var button = document.getElementById('startButton');
+        var images = document.querySelectorAll('.animated-image');
+
+        images.forEach(function(img) {
+                img.src = poof
+        });
+        
+        setTimeout(function() {
+            images.forEach(function(img) {
+                img.parentNode.removeChild(img); // Remove each image
+            });
+        }, 400);
+
+        button.src = originalImageSrc;
+        button.onmousedown = changeImage;
+        button.onmouseup = revertImage;
+        button.onclick = startAnimation;
+    }
+
+    function walkAround(img) {
+        var groundLevel = window.innerHeight * 0.8; // 80% from the top
+        var randomTime = Math.floor(Math.random() * (2000 - 500 + 1)) + 500;
+
+        function moveImage() {
+            var x = Math.random() * (window.innerWidth - img.width);
+            var y = groundLevel - img.height;
+
+            img.style.left = x + 'px';
+            img.style.top = y + 'px';
+
+            if (Math.random() < 0.5) {
+                img.classList.add('flip-horizontal');
+            } else {
+                img.classList.remove('flip-horizontal');
+            }
+        }
+
+        setInterval(moveImage, 2000); // Change position every 2 seconds
+    }
+</script>
+
+</body>
+</html>
