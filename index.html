@@ -38,7 +38,7 @@
 </head>
 <body>
 
-<img src="startButton.png" class="button-image" id="startButton" onmousedown="changeImage()" onmouseup="revertImage()" onclick="startAnimation()" alt="Start Button">
+<img src="startButton.png" class="button-image" id="startButton" onmousedown="changeImage()" onmouseup="revertImage()" ontouchstart="changeImage()" ontouchend="revertImage()" onclick="startAnimation()" alt="Start Button">
 <div id="ground"></div>
 
 
@@ -84,6 +84,8 @@
             button.src = endButtonImageSrc;
             button.onmousedown = endButtonClickImageChange;
             button.onmouseup = endButtonClickImageRevert;
+            button.ontouchstart = endButtonClickImageChange;
+            button.ontouchend = endButtonClickImageRevert;
             //button.innerHTML = "New Button Text"; // Change the button text
             button.onclick = endLittleGuys; // Change the function called on click
             // You can also add more changes here like changing the button's style
@@ -115,6 +117,8 @@
         button.src = originalImageSrc;
         button.onmousedown = changeImage;
         button.onmouseup = revertImage;
+        button.ontouchstart = changeImage;
+        button.ontouchend = revertImage;
         button.onclick = startAnimation;
     }
 
